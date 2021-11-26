@@ -18,6 +18,22 @@ const insertContentIntoTag = ({ tag, propertyName }, content) =>
 const createIconHTML = WeatherIcon => 
   `<img src="../src/icons/${WeatherIcon}.svg" />`
 
+
+const handleWeatherData = async Key => {
+  const [{ WeatherText, Temperature, IsDayTime, WeatherIcon }] = 
+    await getCityWeather(Key)
+  const temperatureInCelsius = Temperature.Metric.Value
+  const timeIcon = createIconHTML(WeatherIcon)
+  
+  hideCityCard()
+
+  insertWeatherIcon(IsDayTime)
+  
+  insertContentIntoTag(timeIconInfo, timeIcon)
+  insertContentIntoTag(weatherTextInfo, WeatherText)
+  insertContentIntoTag(temperatureInfo, temperatureInCelsius)
+}
+
 const hideCityCard = () => {
   const isCityCardHidden = cityCard.classList.contains('d-none')
   const showCityCard = () => cityCard.classList.remove('d-none')
@@ -35,19 +51,8 @@ cityForm.addEventListener('submit', async event => {
 
   const inputValue = event.target.city.value
   const [{ Key, LocalizedName }] = await getCityData(inputValue)
-  const [{ WeatherText, Temperature, IsDayTime, WeatherIcon }] = 
-    await getCityWeather(Key)
-  const temperatureInCelsius = Temperature.Metric.Value
-  const timeIcon = createIconHTML(WeatherIcon)
-  
-  hideCityCard()
-
-  insertWeatherIcon(IsDayTime)
-  
-  insertContentIntoTag(timeIconInfo, timeIcon)
   insertContentIntoTag(localizedNameInfo, LocalizedName)
-  insertContentIntoTag(weatherTextInfo, WeatherText)
-  insertContentIntoTag(temperatureInfo, temperatureInCelsius)
+  handleWeatherData(Key)
   
   event.target.reset()
 })
