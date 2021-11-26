@@ -6,10 +6,29 @@ const cityForm = document.querySelector('[data-js="change-location"]')
 const timeIconConContainer = document.querySelector('[data-js="time-icon"]')
 let timeImg = document.querySelector('[data-js="time"]')
 
-const insertContentIntoTag = (tag, property, content) => tag[property] = content
+
+const timeIconInfo = { tag: timeIconConContainer, propertyName: 'innerHTML' }
+const localizedNameInfo = { tag: cityNameContainer, propertyName: 'textContent' }
+const weatherTextInfo = { tag: cityWeatherContainer, propertyName: 'textContent' }
+const temperatureInfo = { tag: cityTemperatureContainer, propertyName: 'textContent' }
+
+const insertContentIntoTag = ({ tag, propertyName }, content) => 
+  tag[propertyName] = content
 
 const createIconHTML = WeatherIcon => 
   `<img src="../src/icons/${WeatherIcon}.svg" />`
+
+const hideCityCard = () => {
+  const isCityCardHidden = cityCard.classList.contains('d-none')
+  const showCityCard = () => cityCard.classList.remove('d-none')
+
+  if (isCityCardHidden) {
+    showCityCard()
+  }
+}
+
+const insertWeatherIcon = (IsDayTime) => 
+  timeImg.src = IsDayTime ? '../src/day.svg' : '../src/night.svg'
 
 cityForm.addEventListener('submit', async event => {
   event.preventDefault()
@@ -18,20 +37,17 @@ cityForm.addEventListener('submit', async event => {
   const [{ Key, LocalizedName }] = await getCityData(inputValue)
   const [{ WeatherText, Temperature, IsDayTime, WeatherIcon }] = 
     await getCityWeather(Key)
+  const temperatureInCelsius = Temperature.Metric.Value
   const timeIcon = createIconHTML(WeatherIcon)
-  const isCityCardHidden = cityCard.classList.contains('d-none')
-  const showCityCard = () => cityCard.classList.remove('d-none')
-
-  if (isCityCardHidden) {
-    showCityCard()
-  }
-
-  timeImg.src = IsDayTime ? '../src/day.svg' : '../src/night.svg'
   
-  insertContentIntoTag(timeIconConContainer, 'innerHTML', timeIcon)
-  insertContentIntoTag(cityNameContainer, 'textContent', LocalizedName)
-  insertContentIntoTag(cityWeatherContainer, 'textContent', WeatherText)
-  insertContentIntoTag(cityTemperatureContainer, 'textContent', Temperature.Metric.Value)
+  hideCityCard()
+
+  insertWeatherIcon(IsDayTime)
+  
+  insertContentIntoTag(timeIconInfo, timeIcon)
+  insertContentIntoTag(localizedNameInfo, LocalizedName)
+  insertContentIntoTag(weatherTextInfo, WeatherText)
+  insertContentIntoTag(temperatureInfo, temperatureInCelsius)
   
   event.target.reset()
 })
