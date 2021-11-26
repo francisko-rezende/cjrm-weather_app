@@ -1,5 +1,25 @@
 body {
-  background: #233047;
+  background: hsl(175deg 64% 21%);
+}
+
+.green-text {
+  color: hsl(175deg 64% 21%);
+}
+
+.green-text::placeholder {
+  color: hsl(175deg 64% 21% / 0.8);
+}
+
+.green-text::focus {
+  color: hsl(175deg 64% 21%);
+}
+
+.yellow-text {
+  color: hsl(36deg 100% 73%);
+}
+
+.faded-yellow-text {
+  color: hsl(36deg 100% 73% / 0.9);
 }
 
 .container {
