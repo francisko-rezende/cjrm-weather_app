@@ -43,6 +43,14 @@ const hideCityCard = () => {
   }
 }
 
+let Key = null
+
+const handleCityData = async inputValue => {
+  const [cityData] = await getCityData(inputValue)
+  Key = cityData.Key
+  insertContentIntoTag(localizedNameInfo, cityData.LocalizedName)
+}
+
 const insertWeatherIcon = (IsDayTime) => 
   timeImg.src = IsDayTime ? '../src/day.svg' : '../src/night.svg'
 
@@ -50,8 +58,9 @@ cityForm.addEventListener('submit', async event => {
   event.preventDefault()
 
   const inputValue = event.target.city.value
-  const [{ Key, LocalizedName }] = await getCityData(inputValue)
-  insertContentIntoTag(localizedNameInfo, LocalizedName)
+  
+  await handleCityData(inputValue)
+  
   handleWeatherData(Key)
   
   event.target.reset()
