@@ -66,7 +66,7 @@ const handleCityData = async inputValue => {
   insertContentIntoTag(localizedNameInfo, cityData.LocalizedName)
 }
 
-cityForm.addEventListener('submit', async event => {
+const displayCityWeather = async event => {
   event.preventDefault()
 
   const inputValue = event.target.city.value
@@ -74,4 +74,6 @@ cityForm.addEventListener('submit', async event => {
   await handleCityData(inputValue)
   handleWeatherData(Key)
   event.target.reset()
-})
+}
+
+cityForm.addEventListener('submit', displayCityWeather)
